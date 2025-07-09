@@ -1,66 +1,123 @@
-## Foundry
+# 💵 Decentralized Stablecoin Protocol (DSC)
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A simplified, fully on-chain DeFi stablecoin protocol inspired by MakerDAO's DAI, using ETH and BTC as exogenous collateral and maintaining a soft peg to USD.
 
-Foundry consists of:
+> Built using Solidity, Chainlink Price Feeds, and Foundry framework.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+---
 
-## Documentation
+## 🔧 Features
 
-https://book.getfoundry.sh/
+- ✅ **Exogenous Collateral**: Supports WETH and WBTC
+- ✅ **Overcollateralized Minting**: Users mint DSC tokens by depositing collateral
+- ✅ **Health Factor & Liquidation**: Ensures protocol safety
+- ✅ **Chainlink Price Feed Integration**
+- ✅ **CEI Pattern (Check-Effects-Interactions)**
+- ✅ **Fully Tested**: Unit, integration, and fuzz tests using Foundry
+- ✅ **Inspired by MakerDAO**, but no governance or fees
 
-## Usage
+---
 
-### Build
+## 🛠️ Contracts Overview
 
-```shell
-$ forge build
+### 1. `DecentralizedStableCoin.sol`
+- Standard ERC20 token (DSC)
+- Mintable and burnable (only by `DSCEngine`)
+- Pegged to USD
+
+### 2. `DSCEngine.sol`
+- Core logic of the protocol
+- Handles:
+  - Collateral deposit/withdraw
+  - Minting and burning DSC
+  - Liquidation logic
+  - Health factor calculation
+
+---
+
+## 🧪 Testing
+
+> All tests written using **Foundry** (`forge-std`) with high code coverage and logic simulation.
+
+Run tests:
+
+```bash
+forge test -vv
 ```
 
-### Test
+Test coverage includes:
 
-```shell
-$ forge test
+- ✅ Collateral Deposit / Mint
+- ✅ Health Factor Enforcement
+- ✅ Liquidation logic
+- ✅ Burn & Redeem
+- ✅ Oracle price manipulation simulation
+- ✅ Fuzz testing scenarios
+
+---
+
+## ⚙️ Deployment
+
+### Script: `script/DeployDSC.s.sol`
+
+Deploy with:
+
+```bash
+forge script script/DeployDSC.s.sol:DeployDSC --rpc-url <RPC_URL> --broadcast --private-key <KEY>
 ```
 
-### Format
+What it does:
 
-```shell
-$ forge fmt
+- Deploys `DecentralizedStableCoin` and `DSCEngine`
+- Sets up price feeds from Chainlink (or mocks locally)
+- Transfers minting rights to `DSCEngine`
+
+---
+
+## 🧩 Directory Structure
+
+```
+src/
+├── DecentralizedStableCoin.sol   # ERC20 token
+├── DSCEngine.sol                 # Core logic contract
+
+script/
+├── DeployDSC.s.sol              # Deployment script
+├── HelperConfig.s.sol           # Handles config/mocks per network
+
+test/
+├── DSCEngine.t.sol              # Full coverage test suite
+├── mocks/
+│   └── MockV3Aggregator.sol     # Price feed mocks
 ```
 
-### Gas Snapshots
+---
 
-```shell
-$ forge snapshot
-```
+## 🔐 Security Practices
 
-### Anvil
+- CEI pattern applied
+- ReentrancyGuard used
+- No reentrancy on external calls
+- Input validation & revert reasons
+- Fuzz testing & invariant checks
 
-```shell
-$ anvil
-```
+---
 
-### Deploy
+## 📚 Inspired By
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+- MakerDAO (DAI)
+- Chainlink Oracle Design Patterns
+- Foundry Clean Architecture
 
-### Cast
+---
 
-```shell
-$ cast <subcommand>
-```
+## 🧑‍💻 Author
 
-### Help
+**Huy Pham**  
+Passionate Smart Contract Developer
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+---
+
+## 📝 License
+
+MIT
